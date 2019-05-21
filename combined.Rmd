@@ -1,0 +1,22 @@
+---
+title: "CMSC320-Final-Tutorial-Project"
+author: "Jerry Qian & Harish Kumar"
+date: "May 4, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+#Customize this to your directory!
+setwd("D:/Documents/Semester4/CMSC320/CMSC320FinalProject")
+```
+
+# Raw data
+```{r}
+library(dplyr)
+library(tidyr)
+library(lubridate)
+
+games <- read.csv("D:/Documents/Semester4/CMSC320/CMSC320FinalProject/data/games.csv") %>% 
+  
+head(games, 100)
+```
