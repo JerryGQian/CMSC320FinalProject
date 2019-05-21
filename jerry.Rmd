@@ -5,6 +5,15 @@ date: "May 4, 2019"
 output: html_document
 ---
 
+#Summoner's Rift and Gameplay (300-400 words)
+League of Legends is currently one of the most popular games in the world. It is a multiplayer online battle arena (MOBA) game where the objective is to destroy the enemy team's nexus behind a series of defensive towers. There are multiple maps and gamemodes. We will be focusing on the most popular one used for esports, ranked, and competitive gameplay called Summoner's Rift. In Summoner's Rift, there are three lanes separated by two jungles with miniobjectives. Teams must work together to take down 4 tiers of defensive towers to reach and destroy the enemy nexus. 
+
+![A map of summoner's rift.](/img/map.png)
+
+#Include resources to learn more about game
+
+
+
 ```{r setup, include=FALSE}
 #Customize this to your directory!
 setwd("D:/Documents/Semester4/CMSC320/CMSC320FinalProject")
