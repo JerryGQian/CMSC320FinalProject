@@ -35,4 +35,191 @@ lol <- read_csv(url)
 head(lol)
 ```
 
+## Observing and Managing the Data
+
+We have loaded the dataset into a nice data table that we can use to do our analysis. Let us look at it; the dataset is 51490 rows by 61 columns! That means we have 51490 games, and 61 attributes/characteristics. Let's have a quick overview as to what they are:
+
+  - `gameId`: the ID number of the game
+  - `creationTime`: the time of when the game was created, in numeric format
+  - `gameDuration`: how long the game went, in seconds
+  - `seasonId`: all games are from Season 9
+  - `winner`: which team won the game (Team 1 or 2)
+  - `firstBlood`: which team got the first kill of the game
+  - `firstTower`: which team destroys an enemy tower first
+  - `firstInhibitor`: which team destroys the Inhibitor first
+  
+The remaining columns describe the champions (characters) that both teams used during the game.
+
+Now, as data analysts we need to ask ourselves the question: Is the data tidy? That is, is the data stored in a format that is easily understandable for humans, easily processable for computers, and easily streamlined for analysis? To ensure this, we can follow **Tidy Data Principles**.
+
+Envisioned by Hadley Wickham, the creator of the magnificent Tidyverse R package, the Tidy Data Principles promote three key features of rectangular data tables (like the ones we have).
+
+  1. Each attribute forms a column
+  2. Each entity forms a row
+  3. Only one entity forms a table
+  
+Lucky for us, our dataset follows all three of these principles! Each row is a game; each column is a characteristic about the game, and the table contans only game entities!
+
+But just because our data is clean, does not mean we are done! Let's see what else we can tidy up, to optimize our data analysis. First, it would be nice if we can see the creation time attribute in a more human-friendly date format. We will use the lubridate package to do this.
+
+```{r dates}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
