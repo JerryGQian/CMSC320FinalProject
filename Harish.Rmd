@@ -1,0 +1,21 @@
+---
+title: "CMSC320 Final - League of Legends Analysis"
+author: "Harish Kumar"
+date: "May 20, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## The Rise of E-Sports
+
+For millenia, humans have embraced the adrenaline and thrill of competition; hunting, gathering, sport, and even war, are all testament to this. Today, civilization continues to glorify competition, as can be seen in global events (Olympics, Commonwealth)
+
+```{r cars}
+summary(cars)
+```
+
+
