@@ -17,11 +17,21 @@ For millenia, humans have embraced the adrenaline and thrill of competition; hun
 
 
 
+## The Dataset
 
+
+
+## Grabbing the Data
+
+We will turn the data into a data table that R can use for analysis. A *data table* is a row by column representation of all the data. Each row represents an **entity**, which is a real-world object, person, or concept; in the case of our dataset, the entity is a single League of Legends game. Now, each column represents an **attribute**, which is a characteristic for an entity. In our case, a LoL game can have an id, a duration, a winner, some statistics (like First Blood), and more.
+
+Our data is stored locally. We create a string that describes the computer location of the dataset, which has been stored as a CSV file. A **Comma-seperated values** (CSV) file is just that, a bunch of values seperated by columns. The `read_csv()` method of R, parses out the commas, analyzes the values, and creates a data table that is much easier for us to handle when we do analysis.
+
+And since this is a huge dat table, we only want to look at some of the values as a preview; we do this with the `head()` function.
 
 ```{r cars}
 url <- 'data/games.csv'
-lol <- read.csv(url)
+lol <- read_csv(url)
 head(lol)
 ```
 
