@@ -1,0 +1,46 @@
+---
+title: "CMSC320-Final-Tutorial-Project"
+author: "Jerry Qian & Harish Kumar"
+date: "May 4, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+#Customize this to your directory!
+setwd("D:/Documents/Semester4/CMSC320/CMSC320FinalProject")
+```
+
+# Raw data
+```{r}
+library(dplyr)
+library(tidyr)
+library(lubridate)
+
+games <- read.csv("D:/Documents/Semester4/CMSC320/CMSC320FinalProject/data/games.csv") %>% 
+  
+head(games, 100)
+```
+
+##Exercise 1: Scatterplot
+```{r}
+library(ggplot2)
+
+ggplot(gapminder, aes(x=year, y=lifeExp)) + geom_point() + geom_smooth(method="lm")
+```
+###Question 1: Is there a general trend (e.g., increasing or decreasing) for life expectancy across time? Is this trend linear? (answering this qualitatively from the plot, you will do a statistical analysis of this question shortly)
+Yes, there is an increasing trend for life expectancy across time. I added a regression line to show this. It appears to be relatively linear except for a slight decrease in "acceleration" since 1990. This could potentially be logarithmic.
+
+##Violin plot
+```{r}
+library(tidyverse)
+library(ggplot2)
+
+gapminder %>%
+  ggplot(aes(x=factor(year), y=lifeExp)) +
+    geom_violin() +
+    labs(title="Life expectancy over time",
+         x = "year",
+         y = "life expectancy")
+```
+
+
