@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(lubridate)
 ```
 
 ## The Rise of E-Sports
@@ -63,8 +64,13 @@ Lucky for us, our dataset follows all three of these principles! Each row is a g
 But just because our data is clean, does not mean we are done! Let's see what else we can tidy up, to optimize our data analysis. First, it would be nice if we can see the creation time attribute in a more human-friendly date format. We will use the lubridate package to do this.
 
 ```{r dates}
+lol <- lol %>%
+  mutate("creationDate" = as_datetime(lol$creationTime))
 
+head(lol$creationDate)
 ```
+
+As you can see, we now have a column which stores the date of the game in a much more human-friendly format. We create a new column with the `mutate()` function, and pass as its values the parsed times; this parsing is done with the `as_datetime()` method brought to us by the lubridate package.
 
 
 
