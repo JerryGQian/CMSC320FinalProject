@@ -56,9 +56,13 @@ In Summoner's Rift, each team is made of 5 players. Each player can choose to pl
 
 ![A map of summoner's rift.](img/map.png)
 
-The objective is to destroy the enemy team's nexus located in their base. Each side's nexus is protected by 4 defensive towers that are placed in each of the lanes. The towers defend the nexus by attacking enemies in their range. Teams must work together to control the map to take down the 4 tiers of towers and destroy the enemy nexus. Furthermore, the nexus spawns computer controlled "minions" at regular intervals (waves) to aid the seige of the enemy base throughout the match. They blindly walk down the lanes and attack the first/closest enemy they see (including enemy minions). Inside the enemy base, there are three inhibitors, one for each lane. When a team destroys the opposing team's inhibitor, the nexus begins to spawn "super minions" that deal significantly more damage and have a lot more health. Destroying the inhibitor allows teams to increase pressure on their opponents.
+The objective is to destroy the enemy team's nexus located in their base. Each side's nexus is protected by 4 defensive towers that are placed in each of the lanes. The towers defend the nexus by attacking enemies in their range. Teams must work together to control the map to take down the 4 tiers of towers and destroy the enemy nexus. Furthermore, the nexus spawns computer controlled "minions" at regular intervals (waves) to aid the seige of the enemy base throughout the match. They blindly walk down the lanes and attack the first/closest enemy they see (including enemy minions). Inside the enemy base, there are three inhibitors, one for each lane. When a team destroys the opposing team's inhibitor, the nexus begins to spawn "super minions" that deal significantly more damage and have a lot more health. Destroying the inhibitor allows teams to increase pressure on their opponents. 
 
-This match can be highly competitive. There are countless strategies that can be used to out maneuver the opposing team. Each champion comes with a learning curve that separates the best players from the millions of players around the world.
+Inside the jungle, there are many important objectives that grant gold and bonuses. The three most important are Dragons, Rift Herald, and Baron Nashor. Slaying a Dragons grants bonuses such as more damage or more movespeed (depending on which type of dragon). Slaying the Rift Herald allows you to summon it in a lane to help seige the enemy base. Slaying Baron Nashor grants large damage boosts, empowered recalls, and offensive/defensive/movement speed bonuses to nearby minions. These three are highly contested objectives and can make or break a game.
+
+Gold can be earned by each player throughout the game. Gold can be used to purchase items in the shop at base that offers different stats, bonuses, and abilities. Killing enemy minions, enemies players, jungle monsters, and towers grant varying amounts of gold.
+
+This game can be highly competitive. There are countless strategies that can be used to out maneuver the opposing team. Each champion comes with a learning curve that separates the best players from the millions of players around the world.
 
 To see an example of what types of strategies can go into gaining an advantage on opponents, watch this video: https://www.youtube.com/watch?v=qzNOSom-uB0
 To learn more about the match, watch this video that describes league of legends in detail to beginners: https://www.youtube.com/watch?v=hOCEfU96AtU
@@ -80,7 +84,7 @@ Our data is stored locally. We create a string that describes the computer locat
 And since this is a huge data table, we only want to look at some of the values as a preview; we do this with the `head()` function.
 
 ```{r cars}
-url <- 'data/matchs.csv'
+url <- 'data/games.csv'
 lol <- read_csv(url)
 head(lol)
 ```
@@ -102,6 +106,11 @@ We have loaded the dataset into a nice data table that we can use to do our anal
   - `firstBaron`: which team destroys the Baron first
   - `firstDragon`: which team destroys a dragon first
   - `firstRiftHerald`: which team destroys the Rift Herald first
+  - `t<n>_towerKills`: number of defensive towers destroyed by team n
+  - `t<n>_inhibitorKills`: number of inhibitors destroyed by team n
+  - `t<n>_baronKills`: number of Baron Nashor's slain by team n
+  - `t<n>_dragonKills`: number of dragons slain by team n
+  - `t<n>_riftHeraldKills`: number of Rift Herald's slain by team n
   
 The remaining columns describe the champions (characters) that both teams used during the match.
 
@@ -130,7 +139,7 @@ Another way we can prepare the dataset for more optimized analysis, is by conver
 
 ```{r minutes}
 lol <- lol %>%
-  mutate("durationMin" = lol$matchDuration / 60)
+  mutate("durationMin" = lol$gameDuration / 60)
 
 lol
 ```
@@ -159,7 +168,7 @@ lol %>%
 
 The data follows a visually pleasing bell curve; this means the data is **normally distributed**. What does that mean, actually? Well, as the size of entities increases, data tends to clump around the mean. In the above graph, most matchs are played in around 30 minutes. As you move away from the mean, the number of matchs played tends to be smaller.
 
-Now, we should note the spike at the start of the x-axis (that is, the matchs that were finished in less than 10 minutes). These are outliers that represent matchs where one team absolutely destroyed the other, or one team went AFK (away from keyboard, or inactive).
+Now, we should note the spike at the start of the x-axis (that is, the matches that were finished in about 3 minutes). These are outliers that represent "remake" matches where one or more players left the game (or disconnected) before 3 minutes.
 
 To make sure the outliers are not skewing the data, we measure the median, which is another statistic to find the central tendency. Let us look:
 
@@ -170,7 +179,7 @@ median(lol$durationMin)
 The median is only different from the mean ever so slightly; this means the outliers are not skewing our data too much. Nevertheless, we will get rid of them (that is, all matchs with a duration less than 10 minutes).
 
 ```{r drop}
-lol <- lol[which(lol$durationMin > 10),]
+lol <- lol[which(lol$durationMin > 5),]
 head(lol)
 ```
 Let's make the same histogram to make sure our dropping of values happened successfully.
@@ -208,7 +217,7 @@ Now, let's get to the mission: what characteristics define a winning team? We ar
 
 ### First Blood and Winning
 
-Well, we have some characteristics to look at: What is the win rate of a team when they achieve first blood? To elaborate, "first blood" is when a team secures the first kill of the match. Of course, it would be expected to be advantageous for a team to kill an enemy first, so that they can gain strong position early in the match.
+Well, we have some characteristics to look at: What is the win rate of a team when they achieve first blood? To elaborate, "first blood" is when a team secures the first kill of the match. Of course, it would be expected to be advantageous for a team to kill an enemy first, so that they can gain strong position early in the match with bonus gold and time with no opponent to contest.
 
 ```{r firstblood}
 lol %>%
@@ -221,11 +230,11 @@ lol %>%
 
 To clarify the format of the above plots, we used the `facet_wrap()` function to split the data into two groups: team 1 winning, and team 2 winning. We then count the number of instances of first blood for both teams, given the condition of winning.
 
-In accordance with our assumptions, the team that achieves first blood has a higher chance of winning. Killing an enemy early in the match allows a team to set up a stronger stance throughout the match, as the enemy team now has only four players to defend their assets and nexus.
+In accordance with our assumptions, the team that achieves first blood has a higher chance of winning. Killing an enemy early in the match allows a team to set up a stronger stance throughout the match, with a gold lead and only 4 opponents defending.
 
 ### First Tower
 
-Another metric that we look at is "first tower": which team destroys one of the other's turrets first? Remember that turrets, also known as towers, are an impediment on the team's path to the enemy nexus; destroying the first one can set a team up nicely to win. Now, is this assumption correct?
+Another metric that we look at is "first tower": which team destroys one of the opponent's towers first? Remember that towers are an impediment on the team's path to the enemy nexus; destroying the first one can set a team up nicely to win. Now, is this assumption correct?
 
 ```{r firsttower}
 lol %>%
@@ -236,7 +245,7 @@ lol %>%
   ggtitle("Does a team win more often when they achieve first tower?")
 ```
 
-Indeed, we are right in our assumptions! By destroying an enemy tower first, a team can develop a strong position early in the match, and offer more passage for minions and teammates in the path to the enemy nexus. 
+Indeed, we are right in our assumptions! By destroying an enemy tower first, a team gains a strong advantage over the opposing team. It gets more map pressure, gold, and the enemies lose the security of hiding behind their towers.
 
 ### First Inhibitor
 
@@ -251,11 +260,11 @@ lol %>%
   ggtitle("Does a team win more often when they achieve first inhibitor?")
 ```
 
-Correct! And by what a margin! Destroying an enemy team's inhibitor can be a major turning point during the match. It allows the team to spawn super minions that act as a nuisance for the enemy team, which in turn can lead to a chain reaction of favorable events.
+Correct! And by what a margin! Destroying an enemy team's inhibitor can be a major turning point during the match. It allows the team to spawn super minions that push lanes and seige the enemy base. Note how getting first inhibitor is a extremely strong indicator of an ultimate victory. This is because the inhibitor is inside the enemy base. To destroy it, the team would have to be winning hard enough to even be in their base!
 
 ### First Baron
 
-The *baron nashor* is a powerful neutral enemy within the arena of Summoner's Rift; it is neutral because it favors neither team, and can be considered a part of its own team! Killing it will give a team special power-ups for a long duration of the match. So it is expected that a team killing the baron first will have an edge, right?
+*Baron Nashor* is a powerful neutral enemy within the arena of Summoner's Rift; it is neutral because it favors neither team. Killing it will grant a team-wide damage, recall, and minion power-up for a couple of minutes. So it is expected that a team killing the Baron first will have an edge, right?
 
 
 ```{r firstbaron}
@@ -267,7 +276,7 @@ lol %>%
   ggtitle("Does a team win more often when they achieve first baron?")
 ```
 
-The above graph shows that when a team kills the baron, it has a higher chance of winning. Now, there also seems to be alot of 'neithers', or zeroes. This means neither team killed the baron at any point in the match; this is understandable, because killing the baron is no easy task. But considering matchs where the baron was killed, the team that killed it first often prevailed as the winners.
+The above graph shows that when a team kills the baron, it has a higher chance of winning. Now, there also seems to be alot of 'neithers', or zeroes. This means neither team killed the baron at any point in the match; this is understandable, because killing the baron is no easy task. Usually, teams need to group us as five to slay it together. Ontop of that, the opposing team will usually contest the baron, which means they will try to fight your team for it. Often times, the team attempting to slay the baron are low in health and decide the disengage it when the opposing team tries to contest. But considering matchs where the baron was killed, the team that killed it first often prevailed as the winners.
 
 ### First Dragon
 
@@ -282,11 +291,11 @@ lol %>%
   ggtitle("Does a team win more often when they achieve first dragon?")
 ```
 
-It is more easier to kill a dragon, hence the low number of 'neithers'. But once again, teams that achieve first dragon are more likely to win than the other team.
+It is more easier to kill a dragon, hence the low number of 'neithers'. But once again, teams that achieve first dragon are more likely to win than the other team. Killing the first dragon usually indicates that the team has control over the bottom side jungle (where the dragon pit is located) which is crucial for victory.
 
 ### First Rift Herald
 
-Finally, we will look at the *Rift Herald*, which is another monster within the arena. Killing it also gives a team benefits; it is important to note that this monster automatically despawns at around 20 minutes into the match (which means a team must kill it beforehand).
+Finally, we will look at the *Rift Herald*, which is another monster within the arena. Killing it allows the team to summon the Rift Herald in a lane to help seige towers. It is important to note that this monster automatically despawns at 20 minutes into the match (which means teams must kill it beforehand).
 
 ```{r firstherald}
 lol %>%
@@ -297,7 +306,7 @@ lol %>%
   ggtitle("Does a team win more often when they achieve first rift herald?")
 ```
 
-Woah! Remember that I said the Rift Herald despawns 20 minutes into the match. There are more instances where neither team defeats the rift herals, but the matchs in which it is defeated, the slaying team tends to be victorious.
+Woah! Remember that I said the Rift Herald despawns 20 minutes into the match. There are more instances where neither team defeats the Rift Heralds, but the matches in which it is defeated, the slaying team tends to be victorious. This makes sense because summoning the Rift Herald usually means the team destroys a tower with it.
 
 Okay, we are done with our exploratory data analysis. It is time to delve into more sophisticated analysis and machine learning!
 
@@ -311,7 +320,7 @@ library(broom)
 library(ggplot2)
 ```
 
-Machine learning is powerful as it can take large amounts of data and make predictions on the FUTURE! Fitting a machine learning model gives us a tool to gain insights on what has not happened yet based on current stats on a match. For example, we can train a ML model to predict which team will win based off of which team captures objectives first. The simplest machine learning strategy is linear regression! Fitting this model essentially gives us a line of best fit for the data. 
+Machine learning is powerful as it can take large amounts of data and make predictions on the FUTURE! Fitting a machine learning model gives us a tool to gain insights on what has not happened yet based on current stats of a match. For example, we can train a machine learning model to predict which team will win based off of which team captures objectives first. The simplest machine learning strategy is linear regression! Fitting this model essentially gives us a line of best fit for the data. 
 
 Not so fast! Linear regression will not work on these values! Take a look at what happens when we try to put "win" vs "first blood" in a scatterplot.
 
