@@ -12,6 +12,20 @@ library(tidyverse)
 library(lubridate)
 ```
 
+## Table Of Contents
+
+  1. The Rise of E-Sports
+  2. Data Analytics and E-Sports
+  3. League of Legends and Summoner's Rift
+  4. The Dataset
+  5. Grabbing the Data
+  6. Observing and Managing the Data
+  7. Exploring the Data: Some Basic Summaries
+  8. Exploratory Data Analysis: Characteristics of Winning
+  9. Machine Learning
+
+---
+
 ## The Rise of E-Sports
 
 For millenia, humans have embraced the adrenaline and thrill of competition; hunting, gathering, sport, and even war, are all testament to this. Today, civilization continues to glorify competition, as can be seen in global events (Olympics, Commonwealth)

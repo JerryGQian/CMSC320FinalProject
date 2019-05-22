@@ -5,6 +5,20 @@ date: "May 20, 2019"
 output: html_document
 ---
 
+## Table Of Contents
+
+  1. The Rise of E-Sports
+  2. Data Analytics and E-Sports
+  3. League of Legends and Summoner's Rift
+  4. The Dataset
+  5. Grabbing the Data
+  6. Observing and Managing the Data
+  7. Exploring the Data: Some Basic Summaries
+  8. Exploratory Data Analysis: Characteristics of Winning
+  9. Machine Learning
+
+---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
