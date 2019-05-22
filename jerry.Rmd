@@ -118,4 +118,7 @@ totals_fit %>%
 
 Why not do all of the attributes? This may lead to overfitting on the data. This is bad because the resulting model will work great for the data in the set it was trained on, but not so well for NEW data points! The whole point of regression is to make a statistical prediction on what has not happened!
 
+Linear and logistic regression is only the simplest machine learning algorithm. There are many more machine learning algorithms that can be used for different purposes. If you are interested in learning more about machine learning, visit this website: https://skymind.ai/wiki/machine-learning-algorithms
+
+
 
