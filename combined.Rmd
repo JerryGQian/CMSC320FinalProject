@@ -5,18 +5,226 @@ date: "May 20, 2019"
 output: html_document
 ---
 
+
 ```{r setup, include=FALSE}
-#Customize this to your directory!
-setwd("D:/Documents/Semester4/CMSC320/CMSC320FinalProject")
-```
-
-# Raw data
-```{r}
-library(dplyr)
-library(tidyr)
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 library(lubridate)
-
-games <- read.csv("D:/Documents/Semester4/CMSC320/CMSC320FinalProject/data/games.csv") %>% 
-  
-head(games, 100)
 ```
+
+## The Rise of E-Sports
+
+For millenia, humans have embraced the adrenaline and thrill of competition; hunting, gathering, sport, and even war, are all testament to this. Today, civilization continues to glorify competition, as can be seen in global events (Olympics, Commonwealth)
+
+
+
+
+## The Dataset
+
+
+
+## Grabbing the Data
+
+We will turn the data into a data table that R can use for analysis. A *data table* is a row by column representation of all the data. Each row represents an **entity**, which is a real-world object, person, or concept; in the case of our dataset, the entity is a single League of Legends game. Now, each column represents an **attribute**, which is a characteristic for an entity. In our case, a LoL game can have an id, a duration, a winner, some statistics (like First Blood), and more.
+
+Our data is stored locally. We create a string that describes the computer location of the dataset, which has been stored as a CSV file. A **Comma-seperated values** (CSV) file is just that, a bunch of values seperated by columns. The `read_csv()` method of R, parses out the commas, analyzes the values, and creates a data table that is much easier for us to handle when we do analysis. We store the result in our `lol` variable, which will become an identifier for the data table.
+
+And since this is a huge data table, we only want to look at some of the values as a preview; we do this with the `head()` function.
+
+```{r cars}
+url <- 'data/games.csv'
+lol <- read_csv(url)
+head(lol)
+```
+
+---
+
+## Observing and Managing the Data
+
+We have loaded the dataset into a nice data table that we can use to do our analysis. Let us look at it; the dataset is 51490 rows by 61 columns! That means we have 51490 games, and 61 attributes/characteristics. Let's have a quick overview as to what they are:
+
+  - `gameId`: the ID number of the game
+  - `creationTime`: the time of when the game was created, in numeric format
+  - `gameDuration`: how long the game went, in seconds
+  - `seasonId`: all games are from Season 9
+  - `winner`: which team won the game (Team 1 or 2)
+  - `firstBlood`: which team got the first kill of the game
+  - `firstTower`: which team destroys an enemy tower first
+  - `firstInhibitor`: which team destroys the Inhibitor first
+  
+The remaining columns describe the champions (characters) that both teams used during the game.
+
+Now, as data analysts we need to ask ourselves the question: Is the data tidy? That is, is the data stored in a format that is easily understandable for humans, easily processable for computers, and easily streamlined for analysis? To ensure this, we can follow **Tidy Data Principles**.
+
+Envisioned by Hadley Wickham, the creator of the magnificent Tidyverse R package, the Tidy Data Principles promote three key features of rectangular data tables (like the ones we have).
+
+  1. Each attribute forms a column
+  2. Each entity forms a row
+  3. Only one entity forms a table
+  
+Lucky for us, our dataset follows all three of these principles! Each row is a game; each column is a characteristic about the game, and the table contans only game entities!
+
+But just because our data is clean, does not mean we are done! Let's see what else we can tidy up, to optimize our data analysis. First, it would be nice if we can see the creation time attribute in a more human-friendly date format. We will use the lubridate package to do this.
+
+```{r dates}
+lol <- lol %>%
+  mutate("creationDate" = as_datetime(lol$creationTime))
+
+head(lol$creationDate)
+```
+
+As you can see, we now have a column which stores the date of the game in a much more human-friendly format. We create a new column with the `mutate()` function, and pass as its values the parsed times; this parsing is done with the `as_datetime()` method brought to us by the lubridate package.
+
+Another way we can prepare the dataset for more optimized analysis, is by converting the game duration from seconds to minutes. We will create a new column with the converted duration.
+
+```{r minutes}
+lol <- lol %>%
+  mutate("durationMin" = lol$gameDuration / 60)
+
+lol
+```
+
+---
+
+## Exploring the Data: Some Basic Summaries
+
+Our data is now ready to be used for analysis! The next step in the data analysis pipeline is crucial: **Exploratory Data Analysis** (EDA). This is the process of doing some preliminary evaluations of trends and statistics in the data. Why do we do this? Well, apart from being a useful form of data analysis in its own right, EDA can guide us in the right direction, when we perform more heftier data analysis and machine learning. It helps us identify where the juicy trends are, and what components of the data to devote our resources to.
+
+Let's do some EDA ourselves. We shall start off by looking at some of the summary stats of our data. What is the mean playing duration of a game in Season 9. Let's call the `mean()` function on our newly created minute duration column.
+
+```{r minute_duration}
+mean(lol$durationMin)
+```
+
+So, the average duration of a Summoner's Rift game is about 30 and a half minutes. How about we look at this further with a histogram? Let's analyze the distribution of minute duration for a game. The `geom_histogram()` method asks for a parameter called `bins`; bins are bounds of data that we do the counting on. Obviously, it will statistically useless to count the instances of every single unique minute duration; we bin our values into small intervals, so that we can come up with more useful analyses. In this case, we split the minute duration values into 100 intervals/bins.
+
+```{r time_dist}
+lol %>%
+  ggplot(aes(durationMin)) +
+  geom_histogram(bins=100) +
+  geom_vline(aes(xintercept=mean(lol$durationMin)), color="red") +
+  labs(x = "Duration of Game in Minutes")
+```
+
+The data follows a visually pleasing bell curve; this means the data is **normally distributed**. What does that mean, actually? Well, as the size of entities increases, data tends to clump around the mean. In the above graph, most games are played in around 30 minutes. As you move away from the mean, the number of games played tends to be smaller.
+
+Now, we should note the spike at the start of the x-axis (that is, the games that were finished in less than 10 minutes). These are outliers that represent games where one team absolutely destroyed the other, or one team went AFK (away from keyboard, or inactive).
+
+To make sure the outliers are not skewing the data, we measure the median, which is another statistic to find the central tendency. Let us look:
+
+```{r median}
+median(lol$durationMin)
+```
+
+The median is only different from the mean ever so slightly; this means the outliers are not skewing our data too much. Nevertheless, we will get rid of them (that is, all games with a duration less than 10 minutes).
+
+```{r drop}
+lol <- lol[which(lol$durationMin > 10),]
+head(lol)
+```
+Let's make the same histogram to make sure our dropping of values happened successfully.
+
+```{r drop1}
+lol %>%
+  ggplot(aes(durationMin)) +
+  geom_histogram(bins=100) +
+  geom_vline(aes(xintercept=mean(lol$durationMin)), color="red") +
+  labs(x = "Duration of Game in Minutes")
+```
+
+Looks more like it!
+
+Remember that data analysis is a cyclic process; at any step of the way, an astute data analyst should be prepared to go back and modify. Data analysis is all about optimization, and we should always strive for the best continuously, in our results!
+
+---
+
+What is the distribution of Team 1 and Team 2 wins across all 50,000-some games? We will create a bar plot to check this out; it will count the number of times Team 1 has won, versus Team 2.
+
+```{r hist1}
+lol %>%
+  ggplot(aes(factor(winner))) +
+  geom_bar() +
+  labs(x="Winning Team", y="Count")
+```
+
+It's nice to know that our data is pretty evenly distributed for both Team 1 and Team 2 wins; this means we are dealing with little skew towards either team, when doing our analysis.
+
+---
+
+## Exploratory Data Analysis: Characteristics of Winning
+
+Now, let's get to the mission: what characteristics define a winning team? We are going to heftier machine learning on it later, but for now, we will look at trends with EDA.
+
+### First Blood and Winning
+
+Well, we have some characteristics to look at: What is the win rate of a team when they achieve first blood? To elaborate, "first blood" is when a team secures the first kill of the game. Of course, it would be expected to be advantageous for a team to kill an enemy first, so that they can gain strong position early in the game.
+
+```{r firstblood}
+lol %>%
+  ggplot(aes(factor(firstBlood))) +
+  geom_bar() +
+  facet_wrap(~winner) +
+  labs(x="Team that acheives First Blood", y="Count") +
+  ggtitle("Does a team win more often when they achieve first blood?")
+```
+
+To clarify the format of the above plots, we used the `facet_wrap()` function to split the data into two groups: team 1 winning, and team 2 winning. We then count the number of instances of first blood for both teams, given the condition of winning.
+
+In accordance with our assumptions, the team that achieves first blood has a higher chance of winning. Killing an enemy early in the game allows a team to set up a stronger stance throughout the game, as the enemy team now has only four players to defend their assets and nexus.
+
+### First Tower
+
+Another metric that we look at is "first tower": which team destroys one of the other's turrets first? Remember that turrets, also known as towers, are an impediment on the team's path to the enemy nexus; destroying the first one can set a team up nicely to win. Now, is this assumption correct?
+
+```{r firsttower}
+lol %>%
+  ggplot(aes(factor(firstTower))) +
+  geom_bar() +
+  facet_wrap(~winner) +
+  labs(x="Team that acheives First Tower", y="Count") +
+  ggtitle("Does a team win more often when they achieve first tower?")
+```
+
+Indeed, we are right in our assumptions! By destroying an enemy tower first, a team can develop a strong position early in the game, and offer more passage for minions and teammates in the path to the enemy nexus.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

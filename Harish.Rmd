@@ -115,7 +115,26 @@ To make sure the outliers are not skewing the data, we measure the median, which
 median(lol$durationMin)
 ```
 
-The median is only different from the mean ever so slightly; this means the outliers are not skewing our data too much, and we can proceed with more data analysis.
+The median is only different from the mean ever so slightly; this means the outliers are not skewing our data too much. Nevertheless, we will get rid of them (that is, all games with a duration less than 10 minutes).
+
+```{r drop}
+lol <- lol[which(lol$durationMin > 10),]
+head(lol)
+```
+
+Let's make the same histogram to make sure our dropping of values happened successfully.
+
+```{r drop1}
+lol %>%
+  ggplot(aes(durationMin)) +
+  geom_histogram(bins=100) +
+  geom_vline(aes(xintercept=mean(lol$durationMin)), color="red") +
+  labs(x = "Duration of Game in Minutes")
+```
+
+Looks more like it!
+
+Remember that data analysis is a cyclic process; at any step of the way, an astute data analyst should be prepared to go back and modify. Data analysis is all about optimization, and we should always strive for the best continuously, in our results!
 
 ---
 
@@ -130,7 +149,45 @@ lol %>%
 
 It's nice to know that our data is pretty evenly distributed for both Team 1 and Team 2 wins; this means we are dealing with little skew towards either team, when doing our analysis.
 
+---
 
+## Exploratory Data Analysis: Characteristics of Winning
+
+Now, let's get to the mission: what characteristics define a winning team? We are going to heftier machine learning on it later, but for now, we will look at trends with EDA.
+
+### First Blood and Winning
+
+Well, we have some characteristics to look at: What is the win rate of a team when they achieve first blood? To elaborate, "first blood" is when a team secures the first kill of the game. Of course, it would be expected to be advantageous for a team to kill an enemy first, so that they can gain strong position early in the game.
+
+```{r firstblood}
+lol %>%
+  ggplot(aes(factor(firstBlood))) +
+  geom_bar() +
+  facet_wrap(~winner) +
+  labs(x="Team that acheives First Blood", y="Count") +
+  ggtitle("Does a team win more often when they achieve first blood?")
+```
+
+To clarify the format of the above plots, we used the `facet_wrap()` function to split the data into two groups: team 1 winning, and team 2 winning. We then count the number of instances of first blood for both teams, given the condition of winning.
+
+In accordance with our assumptions, the team that achieves first blood has a higher chance of winning. Killing an enemy early in the game allows a team to set up a stronger stance throughout the game, as the enemy team now has only four players to defend their assets and nexus.
+
+### First Tower
+
+Another metric that we look at is "first tower": which team destroys one of the other's turrets first? Remember that turrets, also known as towers, are an impediment on the team's path to the enemy nexus; destroying the first one can set a team up nicely to win. Now, is this assumption correct?
+
+```{r firsttower}
+lol %>%
+  ggplot(aes(factor(firstTower))) +
+  geom_bar() +
+  facet_wrap(~winner) +
+  labs(x="Team that acheives First Tower", y="Count") +
+  ggtitle("Does a team win more often when they achieve first tower?")
+```
+
+Indeed, we are right in our assumptions! By destroying an enemy tower first, a team can develop a strong position early in the game, and offer more passage for minions and teammates in the path to the enemy nexus.
+
+### First Inhibitor
 
 
 
