@@ -28,14 +28,24 @@ library(lubridate)
 
 ## The Rise of E-Sports
 
-For millenia, humans have embraced the adrenaline and thrill of competition; hunting, gathering, sport, and even war, are all testament to this. Today, civilization continues to glorify competition, as can be seen in global events (Olympics, Commonwealth)
+For millennia, humans have embraced the adrenaline and thrill of competition; hunting, gathering, sport, and even war, are all testament to this. Today, civilization continues to glorify competition, as can be seen in global events (Olympics, Commonwealth Games, etc.), sport leagues (Champions League, NFL, IPL, etc.), and more. In alliance with technological advancement, we are now witnessing the growth of a new kind of competitive arena: e-sports.
+
+E-sports is a term for competitive video gaming. Players from all over the world compete individually or in teams with audiences akin to that of more "formal" sports (like soccer). What was considered a homely pastime, is now being considered a full-fledged sport with live streaming, worldwide fanfare, and heavy marketing; after all, to be a successful e-sports athlete, one must follow a regiment and lifestyle proportionally like that of other athletes. 
+To learn more about e-sports, check out [this CNN article](https://www.cnn.com/2018/08/27/us/esports-what-is-video-game-professional-league-madden-trnd/index.html).
+
+---
+
+## Data Analytics and E-Sports
 
 
 
+---
 
 ## The Dataset
 
 
+
+---
 
 ## Grabbing the Data
 
