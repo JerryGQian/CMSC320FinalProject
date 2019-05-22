@@ -8,35 +8,96 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(lubridate)
 ```
 
-#Summoner's Rift and Gameplay (300-400 words)
+#Summoner's Rift and Gameplay
 League of Legends is currently one of the most popular games in the world. It is a part of the multiplayer online battle arena (MOBA) genre where players battle it out, work together, and achieve objectives on an online map with many other players. There are multiple maps and gamemodes. We will be focusing on the most popular one used for esports, ranked, and competitive gameplay called Summoner's Rift. This game can be highly competitive so insights will be useful in many aspects.
 
 In Summoner's Rift, each team is made of 5 players. Each player can choose to play a different champion (character) out of a pool of 140 champions. The players strategically spread out around the map. There are three lanes that connect the two sides (called Top, Middle, Bottom). Each lane is separated by a jungle filled with monsters and objectives. Please refer to the made below for a spatial understanding. 
 
 ![A map of summoner's rift.](img/map.png)
 
-The objective is to destroy the enemy team's nexus located in their base. Each side's nexus is protected by 4 defensive towers that are placed in each of the lanes. The towers defend the nexus by attacking enemies in their range. Teams must work together to control the map to take down the 4 tiers of towers and destroy the enemy nexus. This game can be highly competitive. There are countless strategies that can be used to out maneuver the opposing team. Each champion comes with a learning curve that separates the best players from the millions of players around the world.
+The objective is to destroy the enemy team's nexus located in their base. Each side's nexus is protected by 4 defensive towers that are placed in each of the lanes. The towers defend the nexus by attacking enemies in their range. Teams must work together to control the map to take down the 4 tiers of towers and destroy the enemy nexus. Furthermore, the nexus spawns computer controlled "minions" at regular intervals (waves) to aid the seige of the enemy base throughout the game. They blindly walk down the lanes and attack the first/closest enemy they see (including enemy minions). Inside the enemy base, there are three inhibitors, one for each lane. When a team destroys the opposing team's inhibitor, the nexus begins to spawn "super minions" that deal significantly more damage and have a lot more health. Destroying the inhibitor allows teams to increase pressure on their opponents.
+
+This game can be highly competitive. There are countless strategies that can be used to out maneuver the opposing team. Each champion comes with a learning curve that separates the best players from the millions of players around the world.
 
 To see an example of what types of strategies can go into gaining an advantage on opponents, watch this video: https://www.youtube.com/watch?v=qzNOSom-uB0
 To learn more about the game, watch this video that describes league of legends in detail to beginners: https://www.youtube.com/watch?v=hOCEfU96AtU
 
-
-
-
 # Raw data
-```{r cars}
+```{r}
 url <- 'data/games.csv'
 lol <- read_csv(url)
 head(lol)
 ```
 
-##Exercise 1: Scatterplot
+```{r dates}
+lol <- lol %>%
+  mutate("creationDate" = as_datetime(lol$creationTime))
+
+head(lol$creationDate)
+```
+
+```{r minutes}
+lol <- lol %>%
+  mutate("durationMin" = lol$gameDuration / 60)
+
+lol
+```
+
+
+
+##Simple Machine Learning: Logistic Regression
 ```{r}
+library(ISLR)
+library(dplyr)
+library(broom)
 library(ggplot2)
 
-ggplot(gapminder, aes(x=year, y=lifeExp)) + geom_point() + geom_smooth(method="lm")
+ggplot(lol, aes(x=firstBlood, y=winner)) + geom_point() + geom_smooth(method="lm")
+
+log_lol <- lol %>% 
+  filter(winner > 0) %>%
+  mutate(winner = winner-1)
+
+head(log_lol, 50)
+
+```
+
+```{r}
+data(log_lol)
+
+firsts_fit <- glm(winner ~ firstBlood + firstTower + firstBaron + firstDragon + firstRiftHerald, data=log_lol, family=binomial)
+firsts_fit %>% 
+  tidy() %>%
+  knitr::kable(digits=4)
+
+totals_fit <- glm(winner ~ 
+                     t1_towerKills + t1_inhibitorKills +
+                     t1_baronKills + t1_dragonKills +
+                     t1_riftHeraldKills +
+                     t2_towerKills + t2_inhibitorKills +
+                     t2_baronKills + t2_dragonKills +
+                     t2_riftHeraldKills, data=log_lol, family=binomial)
+totals_fit %>% 
+  tidy() %>%
+  knitr::kable(digits=4)
+
+overall_fit <- glm(winner ~ 
+                     firstBlood + firstTower + 
+                     firstBaron + firstDragon + 
+                     firstRiftHerald + 
+                     t1_towerKills + t1_inhibitorKills +
+                     t1_baronKills + t1_dragonKills +
+                     t1_riftHeraldKills +
+                     t2_towerKills + t2_inhibitorKills +
+                     t2_baronKills + t2_dragonKills +
+                     t2_riftHeraldKills, data=log_lol, family=binomial)
+overall_fit %>% 
+  tidy() %>%
+  knitr::kable(digits=4)
+
 ```
 ###Question 1: Is there a general trend (e.g., increasing or decreasing) for life expectancy across time? Is this trend linear? (answering this qualitatively from the plot, you will do a statistical analysis of this question shortly)
 Yes, there is an increasing trend for life expectancy across time. I added a regression line to show this. It appears to be relatively linear except for a slight decrease in "acceleration" since 1990. This could potentially be logarithmic.
