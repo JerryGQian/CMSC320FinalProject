@@ -49,13 +49,33 @@ lol
 
 
 ##Simple Machine Learning: Logistic Regression
-```{r}
+```{r lrsetup}
 library(ISLR)
 library(dplyr)
 library(broom)
 library(ggplot2)
+```
+
+Machine learning is powerful as it can take large amounts of data and make predictions on the FUTURE! Fitting a machine learning model gives us a tool to gain insights on what has not happened yet based on current stats on a game. For example, we can train a ML model to predict which team will win based off of which team captures objectives first. The simplest machine learning strategy is linear regression! Fitting this model essentially gives us a line of best fit for the data. 
+
+Not so fast! Linear regression will not work on these values! Take a look at what happens when we try to put "win" vs "first blood" in a scatterplot.
+
+### Why not Linear Regression? 
+```{r}
 
 ggplot(lol, aes(x=firstBlood, y=winner)) + geom_point() + geom_smooth(method="lm")
+
+```
+
+As you can see, the outcome of a match is binary: win or loss. The regression line does not have significant meaning. We are unable to do any linear regression to predict the winning team. However, this is perfect for logistic regression! We will be using multiple logistic regression because there are multiple predictor attributes (team with first blood, number of towers, etc).
+
+![Equation for multiple logistic regression.](img/logistic_regression_equation.png)
+
+p(x) represents the probability of the outcome to happen (1). In our case this would be team 2 winning. The x_i's represent the value of each predictor used. For us, this could be which team got first blood or the total number of towers a certain team has destroyed. The beta values are the coefficients to the predictors. These make up our model. To learn more about logistic regression, please visit this link: http://www.hcbravo.org/IntroDataSci/bookdown-notes/linear-models-for-classification.html
+
+Our dataframe in its current state won't work for logistic regression. The range "winner" attribute is not contained within 0 and 1 (binomial random variable). To clean this data for logistic regression, we should first remove the entries that have winner value equal to 0 (tie) as it has no meaning in determining a winner. This can be dont with the dplyr filter function. After removing these entries, our entries have the values of either 1 or 2, which does not fit within 0 and 1. We should map 0 to 1, and 1 to 2. This can simply be done by subtracting 1 from all values. Use the mutate function.
+
+```{r}
 
 log_lol <- lol %>% 
   filter(winner > 0) %>%
@@ -65,6 +85,8 @@ head(log_lol, 50)
 
 ```
 
+Now it's time to fit our model! There are ways to do it with statistical formulas, but this is tedious and unnecessary to do by hand. The glm function does this for us. Lets start simple and use "first*" attributes as predictors for the winning team.
+
 ```{r}
 data(log_lol)
 
@@ -72,6 +94,14 @@ firsts_fit <- glm(winner ~ firstBlood + firstTower + firstBaron + firstDragon + 
 firsts_fit %>% 
   tidy() %>%
   knitr::kable(digits=4)
+
+```
+
+These coefficent values make up the logistic model. Fitting the model to the data is essentially finding the most optimal "weight" or "slope" to each predictor to minimize error between the points and the mean. With this model, we can obtain a prediction on a new match based on these stats! Simply plug in the predictor attribute values into the equation and it will result in a prediction between 0 (team 1 wins) and 1 (team 2 wins). 
+
+There are other attributes that can affect which team wins. Choosing the right predictors is important for fitting a good model. A good predictor is the numbers of each objective because capturing objectives grant bonuses to the team, increases pressure on the opposing team, and increases map control. These are all key to winning the game. Firsts do help by gaining an early advantage over the opposing team, but not nearly as much as overall captures.
+
+```{r}
 
 totals_fit <- glm(winner ~ 
                      t1_towerKills + t1_inhibitorKills +
@@ -84,35 +114,8 @@ totals_fit %>%
   tidy() %>%
   knitr::kable(digits=4)
 
-overall_fit <- glm(winner ~ 
-                     firstBlood + firstTower + 
-                     firstBaron + firstDragon + 
-                     firstRiftHerald + 
-                     t1_towerKills + t1_inhibitorKills +
-                     t1_baronKills + t1_dragonKills +
-                     t1_riftHeraldKills +
-                     t2_towerKills + t2_inhibitorKills +
-                     t2_baronKills + t2_dragonKills +
-                     t2_riftHeraldKills, data=log_lol, family=binomial)
-overall_fit %>% 
-  tidy() %>%
-  knitr::kable(digits=4)
-
 ```
-###Question 1: Is there a general trend (e.g., increasing or decreasing) for life expectancy across time? Is this trend linear? (answering this qualitatively from the plot, you will do a statistical analysis of this question shortly)
-Yes, there is an increasing trend for life expectancy across time. I added a regression line to show this. It appears to be relatively linear except for a slight decrease in "acceleration" since 1990. This could potentially be logarithmic.
 
-##Violin plot
-```{r}
-library(tidyverse)
-library(ggplot2)
-
-gapminder %>%
-  ggplot(aes(x=factor(year), y=lifeExp)) +
-    geom_violin() +
-    labs(title="Life expectancy over time",
-         x = "year",
-         y = "life expectancy")
-```
+Why not do all of the attributes? This may lead to overfitting on the data. This is bad because the resulting model will work great for the data in the set it was trained on, but not so well for NEW data points! The whole point of regression is to make a statistical prediction on what has not happened!
 
 

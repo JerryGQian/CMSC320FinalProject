@@ -38,6 +38,22 @@ To learn more about e-sports, check out [this CNN article](https://www.cnn.com/2
 ## Data Analytics and E-Sports
 
 
+---
+
+## League of Legends and Summoner's Rift
+
+League of Legends is currently one of the most popular games in the world. It is a part of the multiplayer online battle arena (MOBA) genre where players battle it out, work together, and achieve objectives on an online map with many other players. There are multiple maps and gamemodes. We will be focusing on the most popular one used for esports, ranked, and competitive gameplay called Summoner's Rift. This game can be highly competitive so insights will be useful in many aspects.
+
+In Summoner's Rift, each team is made of 5 players. Each player can choose to play a different champion (character) out of a pool of 140 champions. The players strategically spread out around the map. There are three lanes that connect the two sides (called Top, Middle, Bottom). Each lane is separated by a jungle filled with monsters and objectives. Please refer to the made below for a spatial understanding. 
+
+![A map of summoner's rift.](img/map.png)
+
+The objective is to destroy the enemy team's nexus located in their base. Each side's nexus is protected by 4 defensive towers that are placed in each of the lanes. The towers defend the nexus by attacking enemies in their range. Teams must work together to control the map to take down the 4 tiers of towers and destroy the enemy nexus. Furthermore, the nexus spawns computer controlled "minions" at regular intervals (waves) to aid the seige of the enemy base throughout the game. They blindly walk down the lanes and attack the first/closest enemy they see (including enemy minions). Inside the enemy base, there are three inhibitors, one for each lane. When a team destroys the opposing team's inhibitor, the nexus begins to spawn "super minions" that deal significantly more damage and have a lot more health. Destroying the inhibitor allows teams to increase pressure on their opponents.
+
+This game can be highly competitive. There are countless strategies that can be used to out maneuver the opposing team. Each champion comes with a learning curve that separates the best players from the millions of players around the world.
+
+To see an example of what types of strategies can go into gaining an advantage on opponents, watch this video: https://www.youtube.com/watch?v=qzNOSom-uB0
+To learn more about the game, watch this video that describes league of legends in detail to beginners: https://www.youtube.com/watch?v=hOCEfU96AtU
 
 ---
 
@@ -277,6 +293,12 @@ Woah! Remember that I said the Rift Herald despawns 20 minutes into the game. Th
 
 Okay, we are done with our exploratory data analysis. It is time to delve into more sophisticated analysis and machine learning!
 
+---
+
+## Machine Learning
+
+
+---
 
 
 
