@@ -31,11 +31,24 @@ library(lubridate)
 For millennia, humans have embraced the adrenaline and thrill of competition; hunting, gathering, sport, and even war, are all testament to this. Today, civilization continues to glorify competition, as can be seen in global events (Olympics, Commonwealth Games, etc.), sport leagues (Champions League, NFL, IPL, etc.), and more. In alliance with technological advancement, we are now witnessing the growth of a new kind of competitive arena: e-sports.
 
 E-sports is a term for competitive video gaming. Players from all over the world compete individually or in teams with audiences akin to that of more "formal" sports (like soccer). What was considered a homely pastime, is now being considered a full-fledged sport with live streaming, worldwide fanfare, and heavy marketing; after all, to be a successful e-sports athlete, one must follow a regiment and lifestyle proportionally like that of other athletes. 
+
+Some video games that have a major e-sports presence include League of Legends (our focus), Overwatch, Fortnite, and FIFA.
+
 To learn more about e-sports, check out [this CNN article](https://www.cnn.com/2018/08/27/us/esports-what-is-video-game-professional-league-madden-trnd/index.html).
 
 ---
 
 ## Data Analytics and E-Sports
+
+Data analytics has become a major part of modern e-sports. Just like traditional field sports, individuals and teams craft gameplay strategies, commentators conduct game analysis, and audience members refer play records. All data production is automated by the electronic nature of video games, which results in massive corporas of gaming data.
+
+With e-sports on a monumental rise, it is an exciting time for data analysis and e-sports to co-exist. What are the possibilities? For one, players can improve their performance by reflecting on their past performances; this is already possible in major e-sports video games, which have dedicated match analytics and other helpful services. Inconsistencies and problems within games can be figured out faster than ever before, to optimize play. So much more!
+
+To learn more about the confluence between data analytics and e-sports, check out [this post from Intel](https://www.intel.co.uk/content/www/uk/en/it-management/cloud-analytic-hub/big-data-powered-esports.html).
+
+---
+
+## League of Legends and Summoner's Rift
 
 
 
@@ -43,7 +56,7 @@ To learn more about e-sports, check out [this CNN article](https://www.cnn.com/2
 
 ## The Dataset
 
-
+We got our dataset from [https://www.kaggle.com/datasnaek/league-of-legends](https://www.kaggle.com/datasnaek/league-of-legends). It is around 3 megabytes. It contains 51.5k rows, each representing a game, and 61 columns/attributes.
 
 ---
 
