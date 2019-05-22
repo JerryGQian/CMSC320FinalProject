@@ -51,6 +51,9 @@ We have loaded the dataset into a nice data table that we can use to do our anal
   - `firstBlood`: which team got the first kill of the game
   - `firstTower`: which team destroys an enemy tower first
   - `firstInhibitor`: which team destroys the Inhibitor first
+  - `firstBaron`: which team destroys the Baron first
+  - `firstDragon`: which team destroys a dragon first
+  - `firstRiftHerald`: which team destroys the Rift Herald first
   
 The remaining columns describe the champions (characters) that both teams used during the game.
 
@@ -185,7 +188,70 @@ lol %>%
   ggtitle("Does a team win more often when they achieve first tower?")
 ```
 
-Indeed, we are right in our assumptions! By destroying an enemy tower first, a team can develop a strong position early in the game, and offer more passage for minions and teammates in the path to the enemy nexus.
+Indeed, we are right in our assumptions! By destroying an enemy tower first, a team can develop a strong position early in the game, and offer more passage for minions and teammates in the path to the enemy nexus. 
+
+### First Inhibitor
+
+To reiterate, the inhibitor keeps the enemy team from spawning/creating what are known as *super minions*, which are harmful non-player characters (NPCs). Destroying one should be a boon for the team, right?
+
+```{r firstinhib}
+lol %>%
+  ggplot(aes(factor(firstInhibitor))) +
+  geom_bar() +
+  facet_wrap(~winner) +
+  labs(x="Team that acheives First Inhibitor", y="Count") +
+  ggtitle("Does a team win more often when they achieve first inhibitor?")
+```
+
+Correct! And by what a margin! Destroying an enemy team's inhibitor can be a major turning point during the game. It allows the team to spawn super minions that act as a nuisance for the enemy team, which in turn can lead to a chain reaction of favorable events.
+
+### First Baron
+
+The *baron nashor* is a powerful neutral enemy within the arena of Summoner's Rift; it is neutral because it favors neither team, and can be considered a part of its own team! Killing it will give a team special power-ups for a long duration of the game. So it is expected that a team killing the baron first will have an edge, right?
+
+
+```{r firstbaron}
+lol %>%
+  ggplot(aes(factor(firstBaron))) +
+  geom_bar() +
+  facet_wrap(~winner) +
+  labs(x="Team that acheives First Baron", y="Count") +
+  ggtitle("Does a team win more often when they achieve first baron?")
+```
+
+The above graph shows that when a team kills the baron, it has a higher chance of winning. Now, there also seems to be alot of 'neithers', or zeroes. This means neither team killed the baron at any point in the game; this is understandable, because killing the baron is no easy task. But considering games where the baron was killed, the team that killed it first often prevailed as the winners.
+
+### First Dragon
+
+Dragons are like miniature barons; killing them offers more temporary but nevertheless useful power ups. Killing the first dragon is a good way to put one's team ahead. Let's see if that is the case.
+
+```{r firstdrag}
+lol %>%
+  ggplot(aes(factor(firstDragon))) +
+  geom_bar() +
+  facet_wrap(~winner) +
+  labs(x="Team that acheives First Dragon", y="Count") +
+  ggtitle("Does a team win more often when they achieve first dragon?")
+```
+
+It is more easier to kill a dragon, hence the low number of 'neithers'. But once again, teams that achieve first dragon are more likely to win than the other team.
+
+### First Rift Herald
+
+Finally, we will look at the *Rift Herald*, which is another monster within the arena. Killing it also gives a team benefits; it is important to note that this monster automatically despawns at around 20 minutes into the game (which means a team must kill it beforehand).
+
+```{r firstherald}
+lol %>%
+  ggplot(aes(factor(firstRiftHerald))) +
+  geom_bar() +
+  facet_wrap(~winner) +
+  labs(x="Team that acheives First Rift Herald", y="Count") +
+  ggtitle("Does a team win more often when they achieve first rift herald?")
+```
+
+Woah! Remember that I said the Rift Herald despawns 20 minutes into the game. There are more instances where neither team defeats the rift herals, but the games in which it is defeated, the slaying team tends to be victorious.
+
+Okay, we are done with our exploratory data analysis. It is time to delve into more sophisticated analysis and machine learning!
 
 
 
