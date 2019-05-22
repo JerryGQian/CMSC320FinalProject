@@ -1,0 +1,6 @@
+Knited Rmarkdown Website:
+https://jerrygqian.github.io/
+
+Contributions:
+Jerry Qian: league of legends introduction, some of EDA, machine learning/logistic regression
+Harish Kumar: general introduction, data acquisition, cleaning, most of EDA
